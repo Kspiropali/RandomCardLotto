@@ -2,29 +2,34 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define TOTAL 7 
+#define RANGE 16
+
+//int check()
+
 int main()
 {
     FILE *fp = fopen("Results.txt", "a");
     time_t clock;
-    int random[16], finalArr[7], userArr[7], matchArr[7], flag = 0;
+    int random[RANGE], finalArr[TOTAL], userArr[TOTAL], matchArr[TOTAL], flag = 0;
 
     srand(time(&clock));
 
-    printf("Enter 7 numbers between 1 and 16 and without duplicates please:\n\n");
+    printf("Enter TOTAL numbers between 1 and %d and without duplicates please:\n\n",RANGE);
 
     while(flag == 0 || flag == -1)
     {
         flag = 0;
-        for(int i = 0; i <= 6;i++)
+        for(int i = 0; i <= TOTAL - 1;i++)
         {
             do
             {
                 scanf("%d", &userArr[i]);
-                if(userArr[i] < 1 || userArr[i] > 16)
+                if(userArr[i] < 1 || userArr[i] > RANGE)
                 {
-                    printf("Re-enter a number between 1 and 16:\n");
+                    printf("Re-enter a number between 1 and RANGE:\n");
                 }
-            }while(userArr[i] < 1 || userArr[i] > 16);
+            }while(userArr[i] < 1 || userArr[i] > RANGE);
 
             if(i==1 && userArr[0] == userArr[1])
             {
@@ -77,30 +82,30 @@ int main()
         }
     }
 
-    for (int i = 1; i < 17; i++)
+    for (int i = 1; i < RANGE + 1; i++)
     {
         random[i-1] = i;
     }
 
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < RANGE; i++)
     {
         int temp = random[i];
-        int rIndex = rand() % 16;
+        int rIndex = rand() % RANGE;
 
         random[i] = random[rIndex];
         random[rIndex] = temp;
     }
 
     printf("\nLottery Numbers:\nDraw unsorted: ");
-    for(int i=0; i<=6;i++)
+    for(int i=0; i <= TOTAL - 1;i++)
     {
         finalArr[i] = random[i];
         printf(" %d ",finalArr[i]);
     }
 
-    for(int i = 0;i < 6; i++)
+    for(int i = 0; i < TOTAL - 1; i++)
     {
-        for(int j = 0; j < 6 - i; j++)
+        for(int j = 0; j < TOTAL - 1 - i; j++)
         {
             if(finalArr[j] > finalArr[j+1])
             {
@@ -112,20 +117,20 @@ int main()
     }
 
     printf("\nDraw sorted: ");
-    for(int i=0; i<=6;i++)
+    for(int i=0; i <= TOTAL - 1;i++)
     {
         printf("   %d",finalArr[i]);
     }
 
     printf("\n\nUser's Numbers:\nDraw unsorted: ");
-    for(int i=0; i<=6;i++)
+    for(int i=0; i <= TOTAL - 1;i++)
     {
         printf(" %d ",userArr[i]);
     }
 
-    for(int i = 0;i < 6; i++)
+    for(int i = 0;i < TOTAL - 1; i++)
     {
-        for(int j = 0; j < 6 - i; j++)
+        for(int j = 0; j < TOTAL - 1 - i; j++)
         {
             if(userArr[j] > userArr[j+1])
             {
@@ -137,15 +142,15 @@ int main()
     }
 
     printf("\nDraw sorted: ");
-    for(int i=0; i<=6;i++)
+    for(int i=0; i <= TOTAL - 1;i++)
     {
         printf("   %d",userArr[i]);
     }
 
     printf("\nMatching User's Numbers:\n");
-    for(int i = 0; i <= 6; i++)
+    for(int i = 0; i <= TOTAL - 1; i++)
     {
-        for(int j = 0; j <= 6; j++)
+        for(int j = 0; j <= TOTAL - 1; j++)
         {
             if(userArr[j] == finalArr[i])
             {
@@ -155,30 +160,32 @@ int main()
         }
     }
 
-    fwrite("\n\nDraw Sorted: ", 16, 1, fp);
-    for(int i = 0;i <= 6;i++)
+    fwrite("\n\nDraw Sorted: ", RANGE, 1, fp);
+    for(int i = 0;i <= TOTAL - 1;i++)
     {
         fprintf(fp,"  %d", finalArr[i]);
     }
 
-    fwrite("\nUser's Sorted: ", 16, 1, fp);
-    for(int i = 0;i <= 6;i++)
+    fwrite("\nUser's Sorted: ", RANGE, 1, fp);
+    for(int i = 0;i <= TOTAL - 1;i++)
     {
         fprintf(fp,"  %d", userArr[i]);
     }
 
     fwrite("\nMatching numbers: ", 23, 1, fp);
-    for(int i = 0;i <= 6;i++)
+    for(int i = 0;i <= TOTAL - 1;i++)
     {
-        for(int j = 0; j <= 6; j++)
+        for(int j = 0; j <= TOTAL - 1; j++)
         {
             if(userArr[j] == finalArr[i])
             {
-                fprintf(fp,"%d", matchArr[i]);
+                fprintf(fp,"%d  ", matchArr[i]);
             }
         }
     }
+    printf("\n");
 
     fclose(fp);
+
     return 0;
 }
